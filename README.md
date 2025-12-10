@@ -396,7 +396,7 @@ Example:
 
 
 15. System Behavior & Edge Case
-    Normal System Behavior
+1. Normal System Behavior
 + The server validates all incoming requests before processing (file type, file size, required fields).
 
 + All file uploads are handled asynchronously to avoid blocking the event loop.
@@ -484,7 +484,23 @@ If request is not HTTPS (important for ngrok/production):
 
 Server rejects it or auto‑redirects (depending on deployment mode).
 
+18.Criteria 
 
-17. Team Workflow
+User authentication (login/register)	✔
+Token-based session start	✔
+Per‑question video recording	✔
+Immediate per‑question video upload	✔
+Retry policy for failed uploads	✔
+Folder naming rule (timestamp_meetingId_Candidate)	✔
+JSON metadata saved per question	✔
+Finish session = no more uploads allowed	✔
+Meeting management (create + list)	✔
+Company dashboard UI	✔
+Interviewer dashboard + record viewer	✔
+Fetching & shuffling questions	✔
+Viewing recorded videos + transcripts	✔
+Full README + architecture documentation	✔
+---
 
-18. 10. Bonus
+# ⭐ End of README 
+This document brief the  Web Interview Recorder (Per-Question Upload) project.
