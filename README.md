@@ -503,7 +503,7 @@ Server rejects it or auto‑redirects (depending on deployment mode).
 
 Contributors:
 | Member          | Role                             | Primary Responsibilities                                                                                                                                                               |
-| --------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| --------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 | **Trần Quang Huy**    | **Frontend Lead**                | UI/UX, HTML/CSS/JS pages, API integration                                        |
 | **Đào Phát Nhật**   | **Backend Lead & Testing**                 | API, server logic, token verify, upload, folder rules |
 | ** Phạm Khôi Nguyên** | **Documentation & Backend & Testing Lead** | README, flow diagrams, acceptance checks, test scenarios, screenshots, meeting CRUD     |
