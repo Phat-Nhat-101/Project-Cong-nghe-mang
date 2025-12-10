@@ -510,5 +510,5 @@ Contributors:
 | ** Phạm Khôi Nguyên** | 1124 | API, server logic, token verify, upload, folder rules |
 | Nguyen Tran Bao Anh | 1124 |EADME, flow diagrams, acceptance checks, test scenarios, screenshots, meeting CRUD  |
 
-# ⭐ End of README 
+# End of README 
 This document brief the  Web Interview Recorder (Per-Question Upload) project.
