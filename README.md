@@ -1,7 +1,55 @@
 # Project-Cong-nghe-mang
+Overview
+The AI Interview Platform is a lightweight full‑stack web application for delivering recorded interview sessions.
+Candidates can join an interview session, answer randomized questions, record video responses in the browser, and submit transcripts and facial‑expression metadata. Recruiters or interviewers can list sessions, open a session folder, watch per‑question videos, and read the metadata.
+
+
 
 1. Architecture:
-   +
+Frontend (HTML/CSS/JS) 
+        |
+        | REST API (HTTPS via Ngrok)
+        v
+Backend (Node.js / Express)
+        |
+        | File system (Sessions, videos, metadata)
+        v
+Local Storage (uploads/)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 2. Flow:
