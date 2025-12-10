@@ -35,31 +35,26 @@
 </head>
 <body>
 <header>AI Interview</header>
-
 <main>
   <section class="video-panel">
     <div id="meetingInfo">Loading meeting info...</div>
     <video id="preview" autoplay playsinline muted></video>
     <canvas id="overlay"></canvas>
     <div id="questionText">Loading question...</div>
-
     <div class="controls">
       <button id="recordBtn">⏺ Start Recording</button>
       <button id="stopBtn" disabled>⏹ Stop</button>
       <button id="uploadBtn" disabled>📤 Upload</button>
       <button id="finishBtn" disabled>✅ Finish</button>
     </div>
-
     <progress id="progress" value="0" max="100"></progress>
     <div id="status">Idle</div>
   </section>
-
   <aside class="chat-panel">
     <h3>AI Transcript</h3>
     <div id="transcript">Your speech will appear here...</div>
   </aside>
 </main>
-
 <script>
 /* ---------------------------------------- */
 /* DOM ELEMENTS */
@@ -82,7 +77,13 @@ const els = {
 const MAX_Q = 5;
 let mediaRecorder, stream, chunks = [], questionIndex = 0;
 let recognition;
-let folder = "";  // FOLDER SESSION TRẢ VỀ TỪ SERVER
+let folder = "";  
+
+/* ---------------------------------------- */
+/* TIMER LIMIT (2 MINUTES) */
+/* ---------------------------------------- */
+let timer = null;
+let timeLeft = 120; // 2 minutes
 
 /* ---------------------------------------- */
 /* MEETING ID */
@@ -91,7 +92,7 @@ const params = new URLSearchParams(window.location.search);
 const meetingId = params.get("id");
 
 /* ---------------------------------------- */
-/* START SESSION → TẠO FOLDER */
+/* START SESSION */
 /* ---------------------------------------- */
 async function startSession() {
   const res = await fetch("/api/session/start", {
@@ -102,9 +103,8 @@ async function startSession() {
       userName: "Candidate"
     })
   });
-
   const data = await res.json();
-  folder = data.folder; // DÙNG ĐỂ GỬI RECORD
+  folder = data.folder;
 }
 startSession();
 
@@ -139,10 +139,10 @@ async function loadModels() {
   await faceapi.nets.faceExpressionNet.loadFromUri('/models');
   els.status.textContent = "Face model ready ✅";
 }
+
 async function startCamera() {
   stream = await navigator.mediaDevices.getUserMedia({ video:true, audio:true });
   els.preview.srcObject = stream;
-
   await new Promise(resolve => {
     els.preview.onloadedmetadata = () => {
       els.preview.play();
@@ -151,9 +151,9 @@ async function startCamera() {
       resolve();
     };
   });
-
   await loadModels();
 }
+
 startCamera();
 
 /* ---------------------------------------- */
@@ -166,7 +166,6 @@ function initSpeechRecognition() {
   recognition.continuous = true;
   recognition.interimResults = true;
   recognition.lang = "en-US";
-
   recognition.onresult = e => {
     let t = "";
     for (let i = e.resultIndex; i < e.results.length; i++)
@@ -184,29 +183,52 @@ els.recordBtn.onclick = () => {
   mediaRecorder = new MediaRecorder(stream, { mimeType: "video/webm" });
   mediaRecorder.ondataavailable = e => chunks.push(e.data);
   mediaRecorder.start();
-
   if (recognition) recognition.start();
 
   els.recordBtn.disabled = true;
   els.stopBtn.disabled = false;
-  els.status.textContent = "Recording...";
+
+  /* ---------------------------------------- */
+  /* START 2 MINUTE TIMER — NEW CODE */
+  /* ---------------------------------------- */
+  timeLeft = 120;
+  els.status.textContent = `Recording... (${timeLeft}s left)`;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    els.status.textContent = `Recording... (${timeLeft}s left)`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      mediaRecorder.stop();
+      if (recognition) recognition.stop();
+
+      els.stopBtn.disabled = true;
+      els.uploadBtn.disabled = false;
+      els.status.textContent = "Time's up! Ready to upload.";
+    }
+  }, 1000);
 };
 
+/* ---------------------------------------- */
+/* STOP RECORDING */
+/* ---------------------------------------- */
 els.stopBtn.onclick = () => {
+  /* STOP TIMER — NEW */
+  clearInterval(timer);
+
   mediaRecorder.stop();
   if (recognition) recognition.stop();
-
   els.stopBtn.disabled = true;
   els.uploadBtn.disabled = false;
   els.status.textContent = "Ready to upload.";
 };
 
 /* ---------------------------------------- */
-/* REAL UPLOAD — FIXED 100% ✔ */
+/* UPLOAD */
 /* ---------------------------------------- */
 els.uploadBtn.onclick = async () => {
   els.status.textContent = "Uploading...";
-
   const blob = new Blob(chunks, { type: "video/webm" });
   const form = new FormData();
   form.append("video", blob, "video.webm");
@@ -220,10 +242,14 @@ els.uploadBtn.onclick = async () => {
   els.status.textContent = "Uploaded ✔";
 
   questionIndex++;
+
   if (questionIndex < MAX_Q) {
     els.questionText.textContent = questions[questionIndex];
     els.recordBtn.disabled = false;
     els.uploadBtn.disabled = true;
+
+    /* RESET TIMER */
+    timeLeft = 120;
   } else {
     els.finishBtn.disabled = false;
     els.uploadBtn.disabled = true;
@@ -233,15 +259,12 @@ els.uploadBtn.onclick = async () => {
 };
 
 /* ---------------------------------------- */
-/* FINISH → SAVE & REDIRECT (REQUSTED) ✔ */
+/* FINISH */
 /* ---------------------------------------- */
 els.finishBtn.onclick = async () => {
   els.status.textContent = "Finishing session...";
-
   await fetch("/api/session/finish", { method: "POST" });
-
   els.status.textContent = "Saved! Redirecting...";
-
   setTimeout(() => {
     window.location.href = "interviewer.html";
   }, 800);
