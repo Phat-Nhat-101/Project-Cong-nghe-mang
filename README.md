@@ -158,19 +158,63 @@ Notes for production
 + Use a reverse proxy (nginx) and process manager (pm2) in production.
 
 
-
 6. Runs intruction
 
 7. HTTPS requirements
++ Browser APIs for camera/mic (getUserMedia) require secure context (HTTPS) except localhost.
 
-8. File Limits & MIME types
++ If users access your dev machine remotely, use Ngrok (HTTPS) or deploy to HTTPS-enabled hosting.
 
-9. Retry Policy
++ Without HTTPS, camera/mic access will be blocked or restricted — Ngrok is the recommended development workaround.
 
-10. Folder & File Naming Rules
+9. File Limits & MIME types
+    This project enforces strict validation on uploaded files to ensure security, performance, and predictable behavior.
+   Supported MIME Types
+The API accepts only the following MIME types:
 
-11. System Behavior & Edge Case
+image/jpeg
 
-12. Team Workflow
+image/png
 
-13. 10. Bonus
+video/mp4
+
+audio/mpeg (MP3)
+
+audio/wav
+
+application/pdf
+
+text/plain
+
+Any file with an unsupported MIME type will be rejected with an HTTP 415 Unsupported Media Type response.
+
+File Size Limits
+To ensure stable system performance, uploads are limited by size:
+
+File Type	Maximum Size
+  
+    Images (JPG, PNG)	- 10 MB
+    Videos (MP4)	- 50 MB
+    Audio (MP3, WAV)	- 15 MB
+    PDF	- 10 MB
+    Text files	- 2 MB
+If the uploaded file exceeds the limit, the API returns:
+    
+    413 Payload Too Large.
+
+Multiple Files & Total Limit
++ Maximum files per request: 1
+
++ Maximum total upload size per user per hour: 100 MB (configurable)
+
+
+
+11. Retry Policy
+
+12. Folder & File Naming Rules
+
+13. System Behavior & Edge Case
+
+14. Team Workflow
+
+15. 10. Bonus
