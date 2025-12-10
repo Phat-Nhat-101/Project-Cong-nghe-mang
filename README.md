@@ -504,9 +504,9 @@ Server rejects it or auto‑redirects (depending on deployment mode).
 Contributors:
 | Member          | Role                             | Primary Responsibilities                                                                                                                                                               |
 | --------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Trần Quang Huy**    | **Frontend Lead**                | Responsible for UI/UX design, implementing the frontend interface, handling styling and theme, and integrating the frontend with backend APIs.                                         |
-| **Đào Phát Nhật**   | **Backend Lead**                 | In charge of server development, API design and implementation, file upload handling, business logic processing, and preparing all technical documentation such as the project README. |
-| ** PHạm Khôi Nguyên** | **Documentation & Testing Lead** | Handles project documentation, writing detailed workflows, testing the full system, preparing slides and reports, and ensuring quality and consistency across the project.             |
+| **Trần Quang Huy**    | **Frontend Lead**                | UI/UX, HTML/CSS/JS pages, API integration                                        |
+| **Đào Phát Nhật**   | **Backend Lead & Testing**                 | API, server logic, token verify, upload, folder rules |
+| ** Phạm Khôi Nguyên** | **Documentation & Backend & Testing Lead** | README, flow diagrams, acceptance checks, test scenarios, screenshots, meeting CRUD     |
 
 
 
